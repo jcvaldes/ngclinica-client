@@ -1,0 +1,123 @@
+<mat-toolbar color="primary">
+  <span>
+    {{ form.controls['id'].value ? 'Modificar Turno' : 'Nuevo Turno' }}
+  </span>
+  <span class="fill-remaining-space"></span>
+  <button
+    class="btn-dialog-close"
+    mat-stroked-button
+    routerLink="/appointments"
+    tabIndex="-1"
+  >
+    <mat-icon>clear</mat-icon>
+  </button>
+</mat-toolbar>
+<form [formGroup]="form" class="normal-form">
+  <input type="hidden" formControlName="id" />
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <app-category-search
+        (categoryChanged)="categoryChanged($event)"
+        [isMultiple]="false"
+        [comboCtrl]="form.controls['CategoryId']"
+      ></app-category-search>
+    </div>
+    <div class="col-12 col-md-6">
+      <app-professional-search
+      [comboCtrl]="form.controls['ProfessionalId']"
+      >
+      </app-professional-search>
+
+    </div>
+  </div>
+  <div class="row" *ngIf="timeslot.length>0">
+    <div class="col-12 col-md-6">
+      <div class="alert alert-primary text-center" role="alert">
+        <strong>El Profesional elegido atiende los días</strong>
+        <mat-chip-list aria-label="Dias">
+          <mat-chip
+            color="primary"
+            *ngFor="let schedule of timeslot"
+          >
+            {{
+              schedule.day === 1
+                ? 'Lunes'
+                : schedule.day === 2
+                ? 'Martes'
+                : schedule.day === 3
+                ? 'Miércoles'
+                : schedule.day === 4
+                ? 'Jueves'
+                : schedule.day === 5
+                ? 'Viernes'
+                : schedule.day === 6
+                ? 'Sábado'
+                : 'Domingo'
+            }}
+            de {{ schedule.timeStart }} a {{ schedule.timeEnd }}
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <!-- <ngx-calendar
+      #calendar
+      [options]="calendarOptions"
+      (onChangeDate)="onChooseDate($event)"
+      (onChooseDate)="onChooseDate($event)" [events]="calendarEvents"
+    ></ngx-calendar> -->
+      <mat-form-field>
+        <input matInput formControlName="appointmentDate" [matDatepicker]="appointmentDate" placeholder="Fecha de Turno" (dateChange)="onChooseDate($event)" required>
+        <mat-datepicker-toggle matSuffix [for]="appointmentDate"></mat-datepicker-toggle>
+        <mat-datepicker #appointmentDate></mat-datepicker>
+        <mat-error>requerido</mat-error>
+      </mat-form-field>
+
+    </div>
+
+    <div class="col-12 col-md-2" *ngIf="timeTable">
+         <mat-radio-group class="radio-group" (change)="timeChange($event)">
+           <ul>
+             <li *ngFor="let time of timeTable; let i = index">
+               <mat-radio-button [value]="time">
+                 {{ time }}
+               </mat-radio-button>
+               
+             </li>
+           </ul>
+      </mat-radio-group>
+    </div>
+
+  
+  </div>
+
+  <!-- <div class="row">
+    <div class="col-12 col-sm-12 col-md-12">
+      <div class="m-t-5">
+        <mat-slide-toggle formControlName="active" ngchecked="[active]">
+          Habilitado
+        </mat-slide-toggle>
+      </div>
+    </div>
+  </div> -->
+  <hr />
+  <div class="row m-t-10">
+    <div class="col-lg-12">
+      <div class="button-row text-right">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="onSubmit()"
+          type="submit"
+          [disabled]="form.invalid || !appointmentTime"
+        >
+          <mat-icon>save</mat-icon>
+          Guardar
+        </button>
+        <button mat-button color="warn" (click)="onClear()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</form>
