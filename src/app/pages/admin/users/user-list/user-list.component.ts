@@ -68,8 +68,10 @@ export class UserListComponent implements OnInit {
       if (result.value) {
         this._httpService.delete<User>(`${this.url}/${id}`).subscribe(
           () => {
-            this.notificationService.success(
-              'El usuario seleccionado ha sido Eliminado',
+            Swal.fire(
+              'Atención :)',
+              'El usuario ha sido eliminado',
+              'success',
             );
             this.ngOnInit();
           },

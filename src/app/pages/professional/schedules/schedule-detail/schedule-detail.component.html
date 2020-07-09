@@ -1,0 +1,26 @@
+<mat-toolbar color="primary">
+    Actualizar Turno
+  <span class="fill-remaining-space"></span>
+  <button
+    class="btn-dialog-close"
+    mat-stroked-button
+    routerLink="/schedules"
+    tabIndex="-1"
+  >
+    <mat-icon>clear</mat-icon>
+  </button>
+</mat-toolbar>
+<form [formGroup]="form" class="normal-form">
+  <input type="hidden" formControlName="id" />
+
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <mat-form-field>
+        <input matInput formControlName="appointmentDate" [matDatepicker]="appointmentDate" placeholder="Fecha de Turno" (dateChange)="onChooseDate($event)" required>
+        <mat-datepicker-toggle matSuffix [for]="appointmentDate"></mat-datepicker-toggle>
+        <mat-datepicker #appointmentDate></mat-datepicker>
+        <mat-error>requerido</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+</form>

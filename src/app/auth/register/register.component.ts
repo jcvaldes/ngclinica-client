@@ -1,11 +1,11 @@
 import { UserService } from '../../pages/admin/users/user.service';
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
-
-import { Router, ActivationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { validRoles } from '../../utils/enums';
 import { map } from 'rxjs/operators';
-
+import Swal from 'sweetalert2';
+import { AuthService } from '../auth.service';
 declare function init_plugins();
 
 @Component({
@@ -16,7 +16,10 @@ declare function init_plugins();
 export class RegisterComponent implements OnInit {
   form: FormGroup;
   role: number;
+  imageUpload: File;
+  imageTemp: string | ArrayBuffer;
   constructor(
+    public _authService: AuthService,
     public _userService: UserService,
     public router: Router
   ) { }
@@ -38,10 +41,6 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     init_plugins();
-    this.router.events
-      .pipe(map((evento: ActivationEnd) => evento.snapshot.data)).subscribe(role => {
-        debugger
-      });
     this.form = new FormGroup(
       {
         firstname: new FormControl(null, Validators.required),
@@ -67,7 +66,39 @@ export class RegisterComponent implements OnInit {
     };
     this._userService
       .newUser(user)
-      .subscribe(() => this.router.navigate(['/login']),
+      .subscribe((user) => {
+        this.changeImage(user.id);
+        Swal.fire('Usuario creado', user.email, 'success');
+        this.router.navigate(['/login']);
+      },
     );
+  }
+  selectImage(file: File) {
+    if (!file) {
+      this.imageUpload = null;
+      return;
+    }
+    if (file.type.indexOf('image') < 0) {
+      Swal.fire(
+        'Sólo imágenes',
+        'El archivo seleccionado no es una imagen',
+        'error',
+      );
+      this.imageUpload = null;
+      return;
+    }
+    this.imageUpload = file;
+
+    // hace preview de la imagen
+    let reader = new FileReader();
+    let urlImageTmp = reader.readAsDataURL(file);
+    reader.onloadend = () => (this.imageTemp = reader.result);
+  }
+  changeImage(userId) {
+    this._userService
+      .changeImage(this.imageUpload, userId)
+      .then(() => {
+        this.imageUpload = null;
+      });
   }
 }

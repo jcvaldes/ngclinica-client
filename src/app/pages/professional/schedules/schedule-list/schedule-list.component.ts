@@ -17,6 +17,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { NotificationService } from '../../../../services/notification.service';
 import { Schedule } from '../schedule.model';
+import { ScheduleDetailComponent } from '../schedule-detail/schedule-detail.component';
 
 
 @Component({
@@ -52,13 +53,13 @@ export class ScheduleListComponent implements OnInit {
     });
   }
   onEdit(row) {
-    // const dialogRef = this.dialog.open(
-    //   TurnDetailComponent,
-    //   this.dialogConfig(row),
-    // );
-    // dialogRef.afterClosed().subscribe(() => {
-    //   this.loadPage();
-    // });
+    const dialogRef = this.dialog.open(
+      ScheduleDetailComponent,
+      this.dialogConfig(row),
+    );
+    dialogRef.afterClosed().subscribe(() => {
+      this.loadPage();
+    });
   }
   onDelete(id) {
     Swal.fire({

@@ -60,7 +60,7 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
         this.addTimeSlot(6),
         this.addTimeSlot(7)
       ]),
-      active: new FormControl(true),
+      active: new FormControl(false),
     });
     if (router.url.indexOf('/new') !== -1) {
       this.form.addControl('password', new FormControl(null, Validators.required));
@@ -80,7 +80,7 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.user && changes.user.currentValue) {
       this.populateForm(changes.user.currentValue.id);
-   }
+    }
   }
   ngOnDestroy() {
     this.userSubscription.unsubscribe();
@@ -158,7 +158,7 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
   }
   populateForm(id) {
     this._userService.getSingle(`${this.url}/${id}`).subscribe((data: any) => {
-      const { firstname, lastname, email, role } = data.user;
+      const { firstname, lastname, email, role, active } = data.user;
       this.user = data.user;
       const categories = data.user.Professional ? data.user.Professional.categories : null;
       const timeslot = data.user.Professional ? data.user.Professional.timeslot : null;
@@ -167,6 +167,8 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
       this.form.get('firstname').setValue(firstname);
       this.form.get('lastname').setValue(lastname);
       this.form.get('email').setValue(email);
+      this.form.get('active').setValue(active);
+
       this.form.get('role').setValue(role.toString());
       if (role === validRoles.Professional) {
         this.isProfessional = true;
@@ -222,7 +224,6 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
       return;
     }
     this.imageUpload = file;
-
     // hace preview de la imagen
     let reader = new FileReader();
     let urlImageTmp = reader.readAsDataURL(file);
