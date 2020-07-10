@@ -58,13 +58,13 @@ export class ScheduleListComponent implements OnInit {
       this.dialogConfig(row),
     );
     dialogRef.afterClosed().subscribe(() => {
-      this.loadPage();
+      this.ngOnInit();
     });
   }
   onDelete(id) {
     Swal.fire({
       title: '¿Está seguro?',
-      text: 'Estás a punto de cancelar el turno',
+      text: 'Esta punto de cancelar el turno',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, Cancelar!',
@@ -76,13 +76,13 @@ export class ScheduleListComponent implements OnInit {
         //     this.notificationService.success(
         //       'El paciente seleccionado ha sido Eliminado',
         //     );
-        //     this.loadPage();
+        //     this.ngOnInit();
         //   },
         //   (err) => {
         //     console.log(err);
         //     Swal.fire({
         //       title: 'Reglas de Validación',
-        //       text: err,
+        //       text: e
         //       icon: 'error',
         //       showConfirmButton: false,
         //       timer: 2000,
@@ -96,13 +96,8 @@ export class ScheduleListComponent implements OnInit {
   onSearchClear() {
     if (this.input.nativeElement.value.length > 0) {
       this.input.nativeElement.value = '';
-      this.loadPage();
+      this.ngOnInit();
     }
-  }
-
-
-  loadPage() {
-   
   }
 
   dialogConfig(data?) {

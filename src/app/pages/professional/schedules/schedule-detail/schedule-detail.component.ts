@@ -1,7 +1,7 @@
 import { environment } from './../../../../../environments/environment';
 import { Component, OnInit, OnDestroy, ViewChild, Inject } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Subscription, timer } from 'rxjs';
 import { NotificationService } from '../../../../services/notification.service';
 import { Schedule } from '../schedule.model';
 import { User } from '../../../admin/users/user.model';
@@ -25,152 +25,118 @@ export class ScheduleDetailComponent implements OnInit, OnDestroy {
   schedule: Schedule;
   scheduleSubscription: Subscription = new Subscription();
   scheduleTime: Date;
-  form: FormGroup = new FormGroup({
-    id: new FormControl(null),
-    appointmentDate: new FormControl(null, Validators.required),
-    status: new FormControl(null, Validators.required),
-  });
   url: string;
+  form: FormGroup;
+  formHeader: FormGroup;
   constructor(
     private _notificationService: NotificationService,
     private router: Router,
     public _httpService: HttpService,
     private dialogRef: MatDialogRef<ScheduleDetailComponent>,
+    private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
-    this.url = `${environment.apiUrl}/api/appointment`;
+    this.formHeader = fb.group({
+      patient: new FormControl(null),
+      category: new FormControl(null, Validators.required),
+    });
+
+    this.form = fb.group({
+      id: new FormControl(null),
+      appointmentDate: new FormControl(null, Validators.required),
+      appointmentTime: new FormControl(null, Validators.required),
+      status: new FormControl('1', Validators.required),
+    });
+    this.form = fb.group({
+      id: new FormControl(null),
+      appointmentDate: new FormControl(null, Validators.required),
+      appointmentTime: new FormControl(null, Validators.required),
+      status: new FormControl('1', Validators.required),
+    });
+    this.url = `${environment.apiUrl}/api/schedule`;
     this.populateForm(data);
   }
   ngOnDestroy() {
     this.scheduleSubscription.unsubscribe();
   }
-  ngOnInit() {
-
-  }
+  ngOnInit() { }
   onClear() {
     this.form.reset();
     Object.keys(this.form.controls).forEach(key => {
       this.form.get(key).setErrors(null);
     });
   }
+  onClose(refresh?) {
+    this.dialogRef.close(refresh);
+  }
   onSubmit() {
     if (this.form.valid) {
-      if (!this.form.get('id').value) {
-        Swal.fire({
-          title: '¿Deseas Actualizar el los datos del turno?',
-          html: `
+      Swal.fire({
+        title: '¿Deseas Actualizar el los datos del turno?',
+        html: `
             Estás a punto de actualizar un turno del paciente<br>¿Deseas Continuar?
         `,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Sí, Actualizar!',
-          cancelButtonText: 'No',
-        }).then((result) => {
-          if (result.value) {
-            this._httpService.put(this.url, this.form.value).subscribe(
-              (resp: any) => {
-                Swal.fire(
-                  'Atención',
-                  'El turno ha sido actualizado',
-                  'success'
-                );
-                this.onClear();
-                this.router.navigate(['/schedules']);
-              },
-              (err) => {
-                Swal.fire(
-                  'Error',
-                  `:: ${err}`,
-                  'error'
-                );
-              },
-            );
-          }
-        });
-      }
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, Actualizar!',
+        cancelButtonText: 'No',
+      }).then((result) => {
+        if (result.value) {
+          const url = `${this.url}/${this.form.get('id').value}`;
+          this._httpService.put(url, this.prepareData(this.form.value)).subscribe(
+            (resp: any) => {
+              Swal.fire({
+                title: 'Atención',
+                text: 'El turno ha sido actualizado',
+                icon: 'success',
+                timer: 2000,
+                toast: true,
+                position: 'bottom-end',
+                showConfirmButton: false,
+              });
+              this.onClose(true);
+            },
+            (err) => {
+              Swal.fire(
+                'Error',
+                `:: ${err}`,
+                'error'
+              );
+            },
+          );
+        }
+      });
     }
   }
+  private prepareData(value) {
+    const time = value.appointmentTime.split(':');
+    const date = moment(value.appointmentDate);
+    const appointmentDate =  new Date(
+        date.year(),
+        date.month(),
+        date.date(),
+        time[0],
+        time[1]
+      );
+    return {
+      appointmentDate,
+      status: value.status
+    };
+  }
   populateForm(data) {
-    debugger
-    this.scheduleSubscription = this._httpService.getSingle<Schedule>(data.id)
+    const url = `${this.url}/${data.id}`;
+    this.scheduleSubscription = this._httpService.getSingle<Schedule>(url)
       .subscribe((res: any) => {
-        //     this.schedule = res.payload;
-        debugger
-        this.form.get('appointmentDate').setValue(this.schedule.appointmentDate);
-        //     this.form.get('active').setValue(this.schedule.active);
+        const schedule = res.payload;
+        this.form.get('id').setValue(data.id);
+        this.form.get('appointmentDate').setValue(schedule.appointmentDate);
+        this.form.get('status').setValue(schedule.status.toString());
+        this.form.get('appointmentTime').setValue(
+          moment(schedule.appointmentDate).format('HH:mm').toString()
+        );
+        this.formHeader.get('patient').setValue(data.Patient.User.firstname + ' ' + data.Patient.User.lastname);
+        this.formHeader.get('category').setValue(data.Category.name);
+
       }, err => this._notificationService.error(`:: ${err}`));
   }
-  // categoryChanged(category: Category) {
-  //   this.category = category;
-  //   this.professionals = category.professionals || null;
-  //   this.form.get('ProfessionalId').setValue(null);
-  //   this.form.get('ProfessionalId').setErrors(null);
-  //   this.professional = null;
-  // }
-
-  onChooseDate(date: any) {
-    //  // this.calendarValue = date.value;
-    //   this.scheduleTime = null;
-    //   this.timeTable = null;
-    //   if (this.validateSchedule()) {
-    //     this.createTimeTable();
-    //   } else {
-    //     this.form.get('scheduleDate').setValue(null);
-    //   }
-  }
-
-  // onChangeDate(date: any) {
-  //   this.calendarRange = date;
-  // }
-  // private validateSchedule() {
-  //   if (!this.professional || !this.category) {
-  //     this._notificationService.error('Ingresa una especialidad y un profesional antes de continuar');
-  //     return false;
-  //   }
-  //   const atendeeDays = this.professional.timeslot.map(i => i.day);
-  //   if (!atendeeDays.includes(this.calendarValue.isoWeekday())) {
-  //     this._notificationService.error('El profesional elegido no atiende el dia seleccionado, revisa los días en los que atiende e intenta nuevamente');
-  //     return false;
-  //   }
-  //   return true;
-  // }
-  // private createTimeTable() {
-  //   const x = 30; // minutes interval
-  //   const schedule: any = this.professional.timeslot.find(i => i.day === this.calendarValue.isoWeekday());
-  //   const hourStart = +schedule.timeStart.split(':')[0];
-  //   const hourEnd = +schedule.timeEnd.split(':')[0];
-  //   let times = []; // time array
-  //   let tt = 0; // start time
-  //   const ap = ['AM', 'PM']; // AM-PM
-  //   // loop to increment the time and push results in array
-  //   for (let i = 0; tt < 24 * 60; i++) {
-  //     let hh = Math.floor(tt / 60); // getting hours of day in 0-24 format
-  //     let mm = (tt % 60); // getting minutes of the hour in 0-55 format
-  //     times[i] = (hh % 24) +
-  //       ':' + ('0' + mm).slice(-2) // + ' ' + ap[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
-  //     tt = tt + x;
-  //   }
-  //   const timeStart = schedule.timeStart.split(':');
-  //   const timeEnd = schedule.timeEnd.split(':');
-  //   this.timeTable = times.slice(
-  //     times.findIndex(i => {
-  //       const start = i.split(':');
-  //       return +start[0] === +timeStart[0] && +start[1] === +timeStart[1];
-  //     }),
-  //     times.findIndex(i => {
-  //       const end = i.split(':');
-  //       return +end[0] === +timeEnd[0] && +end[1] === +timeEnd[1];
-  //     }),
-  //   );
-  // }
-  // timeChange(evt) {
-  //   const time = evt.value.split(':');
-  //   this.scheduleTime = new Date(
-  //     this.calendarValue.year(),
-  //     this.calendarValue.month(),
-  //     this.calendarValue.date(),
-  //     time[0],
-  //     time[1]
-  //   );
-  // }
 }
