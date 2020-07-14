@@ -30,6 +30,7 @@ export class UserListComponent implements OnInit {
     'lastname',
     'email',
     'role',
+    'is_verified',
     'active',
     'actions',
   ];

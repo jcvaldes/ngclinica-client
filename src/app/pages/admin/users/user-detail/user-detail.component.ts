@@ -49,6 +49,7 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
       firstname: new FormControl(null, Validators.required),
       lastname: new FormControl(null, Validators.required),
       email: new FormControl(null, [Validators.required, Validators.email]),
+      is_verified: new FormControl(false, [Validators.required]),
       role: new FormControl('1', [Validators.required]),
       categories: new FormControl([]),
       timeslot: new FormArray([
@@ -158,7 +159,7 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
   }
   populateForm(id) {
     this._userService.getSingle(`${this.url}/${id}`).subscribe((data: any) => {
-      const { firstname, lastname, email, role, active } = data.user;
+      const { firstname, lastname, email, role, active, is_verified } = data.user;
       this.user = data.user;
       const categories = data.user.Professional ? data.user.Professional.categories : null;
       const timeslot = data.user.Professional ? data.user.Professional.timeslot : null;
@@ -168,7 +169,7 @@ export class UserDetailComponent implements OnInit, OnDestroy, OnChanges {
       this.form.get('lastname').setValue(lastname);
       this.form.get('email').setValue(email);
       this.form.get('active').setValue(active);
-
+      this.form.get('is_verified').setValue(is_verified);
       this.form.get('role').setValue(role.toString());
       if (role === validRoles.Professional) {
         this.isProfessional = true;

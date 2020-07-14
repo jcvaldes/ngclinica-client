@@ -74,7 +74,7 @@
       </mat-form-field>
     </div>
   </div>
-  <div class="row">
+  <div class="row" >
     <div class="col-12 col-md-6">
       <mat-form-field>
         <mat-select
@@ -88,6 +88,26 @@
           <mat-option value="4">Cancelado</mat-option>
         </mat-select>
         <mat-error>requerido</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row" *ngIf="form.get('status').value === '3'"> 
+    <div class="col-12 col-md-12">
+      <mat-form-field class="mb-5 mb-sm-4">
+        <textarea
+          #review
+          matInput
+          placeholder="Reseña"
+          maxlength=""
+          formControlName="reviewProfessional"
+          rows="5"
+          cols="70"
+        ></textarea>
+        <mat-error>requerido</mat-error>
+        <mat-hint align="start" class="w-75">
+          Puede ingresar una reseña cuando el paciente lo haya atendido
+        </mat-hint>
+        <mat-hint align="end">, {{ review.value.length || 0 }} / 300</mat-hint>
       </mat-form-field>
     </div>
   </div>

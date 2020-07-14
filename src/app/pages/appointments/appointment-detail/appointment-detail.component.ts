@@ -77,7 +77,7 @@ export class AppointmentDetailComponent implements OnInit, OnDestroy {
       Swal.fire({
         title: '¿Deseas Confirmar el Turno?',
         html: `
-            Estás a punto de agendar un turno con el profesional <strong>${this.professional.firstname} ${this.professional.lastname}</strong> en la especialidad de <strong>${this.category.name}</strong>
+            Estás a punto de agendar un turno con el profesional <strong>${this.professional.User.firstname} ${this.professional.User.lastname}</strong> en la especialidad de <strong>${this.category.name}</strong>
         `,
         icon: 'warning',
         showCancelButton: true,

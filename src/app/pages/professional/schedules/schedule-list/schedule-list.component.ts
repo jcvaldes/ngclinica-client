@@ -61,38 +61,7 @@ export class ScheduleListComponent implements OnInit {
       this.ngOnInit();
     });
   }
-  onDelete(id) {
-    Swal.fire({
-      title: '¿Está seguro?',
-      text: 'Esta punto de cancelar el turno',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, Cancelar!',
-      cancelButtonText: 'No',
-    }).then((result) => {
-      if (result.value) {
-        // this._scheduleService.delete<Appointment>(id).subscribe(
-        //   () => {
-        //     this.notificationService.success(
-        //       'El paciente seleccionado ha sido Eliminado',
-        //     );
-        //     this.ngOnInit();
-        //   },
-        //   (err) => {
-        //     console.log(err);
-        //     Swal.fire({
-        //       title: 'Reglas de Validación',
-        //       text: e
-        //       icon: 'error',
-        //       showConfirmButton: false,
-        //       timer: 2000,
-        //       animation: false,
-        //     });
-        //   },
-        // );
-      }
-    });
-  }
+
   onSearchClear() {
     if (this.input.nativeElement.value.length > 0) {
       this.input.nativeElement.value = '';

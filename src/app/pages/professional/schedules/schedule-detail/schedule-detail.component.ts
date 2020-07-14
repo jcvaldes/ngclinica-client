@@ -45,12 +45,7 @@ export class ScheduleDetailComponent implements OnInit, OnDestroy {
       id: new FormControl(null),
       appointmentDate: new FormControl(null, Validators.required),
       appointmentTime: new FormControl(null, Validators.required),
-      status: new FormControl('1', Validators.required),
-    });
-    this.form = fb.group({
-      id: new FormControl(null),
-      appointmentDate: new FormControl(null, Validators.required),
-      appointmentTime: new FormControl(null, Validators.required),
+      reviewProfessional: new FormControl(null),
       status: new FormControl('1', Validators.required),
     });
     this.url = `${environment.apiUrl}/api/schedule`;
@@ -120,6 +115,7 @@ export class ScheduleDetailComponent implements OnInit, OnDestroy {
       );
     return {
       appointmentDate,
+      reviewProfessional: value.reviewProfessional,
       status: value.status
     };
   }
@@ -128,15 +124,15 @@ export class ScheduleDetailComponent implements OnInit, OnDestroy {
     this.scheduleSubscription = this._httpService.getSingle<Schedule>(url)
       .subscribe((res: any) => {
         const schedule = res.payload;
+        this.formHeader.get('patient').setValue(data.Patient.User.firstname + ' ' + data.Patient.User.lastname);
+        this.formHeader.get('category').setValue(data.Category.name);
         this.form.get('id').setValue(data.id);
         this.form.get('appointmentDate').setValue(schedule.appointmentDate);
         this.form.get('status').setValue(schedule.status.toString());
         this.form.get('appointmentTime').setValue(
           moment(schedule.appointmentDate).format('HH:mm').toString()
         );
-        this.formHeader.get('patient').setValue(data.Patient.User.firstname + ' ' + data.Patient.User.lastname);
-        this.formHeader.get('category').setValue(data.Category.name);
-
+        this.form.get('reviewProfessional').setValue(schedule.reviewProfessional);
       }, err => this._notificationService.error(`:: ${err}`));
   }
 }
