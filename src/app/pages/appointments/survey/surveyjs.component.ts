@@ -1,13 +1,17 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import * as SurveyEditor from 'surveyjs-editor';
 import * as Survey from 'survey-angular';
-
+import { HttpService } from '../../service/http.service.ts';
 @Component({
   selector: 'surveyjs-component',
   template: `<div id="surveyContainer"></div>`
 })
 export class SurveyjsComponent {
   editor: SurveyEditor.SurveyEditor;
+  constructor(private httpService: HttpService) {
+    
+  }
+
   ngOnInit() {
     Survey
     .StylesManager
@@ -52,8 +56,8 @@ export class SurveyjsComponent {
      Survey.SurveyNG.render("surveyContainer", { model: survey });
   }
 }
+
 function sendDataToServer(survey) {
-debugger
   //send Ajax request to your web server.
   alert("The results are:" + JSON.stringify(survey.data));
 }
