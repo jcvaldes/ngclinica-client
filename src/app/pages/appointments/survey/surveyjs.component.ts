@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import * as SurveyEditor from 'surveyjs-editor';
 import * as Survey from 'survey-angular';
-import { HttpService } from '../../service/http.service.ts';
+import { HttpService } from '../../../services/http.service';
 @Component({
   selector: 'surveyjs-component',
   template: `<div id="surveyContainer"></div>`
