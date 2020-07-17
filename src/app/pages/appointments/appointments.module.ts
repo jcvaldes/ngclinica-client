@@ -13,7 +13,8 @@ import { CategoriesModule } from '../admin/categories/categories.module';
 import { UsersModule } from '../admin/users/users.module';
 import { NgxCalendarModule } from 'ss-ngx-calendar';
 import { ReviewDetailComponent } from './review-detail/review-detail.component';
-import { SurveyjsComponent } from './survey/surveyjs.component';
+import { SurveyjsComponent } from '../survey/surveyjs.component';
+
 @NgModule({
   declarations: [
     AppointmentsComponent,
