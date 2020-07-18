@@ -54,10 +54,15 @@ export class SurveyjsComponent implements OnInit {
         this.httpService.put(`${this.url}/${this.appointmentId}`, elements).subscribe(resp => {
           Swal.fire({
             title: 'Gracias :)',
-            html: 'Tu opinión es muy importante para nosotros. La encuesta ha sido grabada',
+            html: 'La encuesta ha sido guardada satisfactoriamente',
             icon: 'success'
           });
-          this.router.navigate(['/appointments'])
+          const role = this.authService.user.role;
+          if (validRoles.Professional) {
+            this.router.navigate(['/schedules']);
+          } else {
+            this.router.navigate(['/appointments']);
+          }
         }, err => {
           Swal.fire({
             title: 'Error',

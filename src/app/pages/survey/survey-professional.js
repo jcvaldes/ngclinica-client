@@ -4,7 +4,7 @@ const survey = {
       name: 'page1',
       elements: [
         {
-          type: 'text',
+          type: 'rating',
           name: 'question1',
           title: 'Estado físico',
           rateMax: 10,
@@ -41,6 +41,7 @@ const survey = {
         {
           type: 'comment',
           name: 'question5',
+          title: 'Comentarios',
           isRequired: true,
         },
       ],

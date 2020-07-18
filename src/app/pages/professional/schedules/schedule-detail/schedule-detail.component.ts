@@ -10,7 +10,7 @@ import { NgxCalendarComponent } from 'ss-ngx-calendar';
 import Swal from 'sweetalert2';
 import * as moment from 'moment';
 import { HttpService } from '../../../../services/http.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -32,9 +32,8 @@ export class ScheduleDetailComponent implements OnInit, OnDestroy {
     private _notificationService: NotificationService,
     private router: Router,
     public _httpService: HttpService,
-    private dialogRef: MatDialogRef<ScheduleDetailComponent>,
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    private activatedRoute: ActivatedRoute
   ) {
     this.formHeader = fb.group({
       patient: new FormControl(null),
@@ -44,7 +43,11 @@ export class ScheduleDetailComponent implements OnInit, OnDestroy {
 
     this.url = `${environment.apiUrl}/api/schedule`;
     this.createFormGroup();
-    this.populateForm(data);
+    activatedRoute.params.subscribe(params => {
+      const id = +params.id;
+      this.populateForm( +params.id);
+    })
+//    this.populateForm(data);
   }
   ngOnDestroy() {
     this.scheduleSubscription.unsubscribe();
@@ -97,8 +100,8 @@ export class ScheduleDetailComponent implements OnInit, OnDestroy {
       this.form.get(key).setErrors(null);
     });
   }
-  onClose(refresh?) {
-    this.dialogRef.close(refresh);
+  onClose() {
+    this.router.navigate(['/schedules']);
   }
   onSubmit() {
     if (this.form.valid) {
@@ -125,7 +128,7 @@ export class ScheduleDetailComponent implements OnInit, OnDestroy {
                 position: 'bottom-end',
                 showConfirmButton: false,
               });
-              this.onClose(true);
+              this.onClose();
             },
             (err) => {
               Swal.fire(
@@ -156,20 +159,19 @@ export class ScheduleDetailComponent implements OnInit, OnDestroy {
       customfields: value.customfields
     };
   }
-  populateForm(data) {
-    const url = `${this.url}/${data.id}`;
+  populateForm(id) {
+    const url = `${this.url}/${id}`;
     this.scheduleSubscription = this._httpService.getSingle<Schedule>(url)
       .subscribe((res: any) => {
         const schedule = res.payload;
-        this.formHeader.get('patient').setValue(data.Patient.User.firstname + ' ' + data.Patient.User.lastname);
-        this.formHeader.get('category').setValue(data.Category.name);
-        this.form.get('id').setValue(data.id);
+        this.formHeader.get('patient').setValue(schedule.Patient.User.firstname + ' ' + schedule.Patient.User.lastname);
+        this.formHeader.get('category').setValue(schedule.Category.name);
+        this.form.get('id').setValue(schedule.id);
         this.form.get('appointmentDate').setValue(schedule.appointmentDate);
         this.form.get('status').setValue(schedule.status.toString());
         this.form.get('appointmentTime').setValue(
           moment(schedule.appointmentDate).format('HH:mm').toString()
         );
-        debugger
         schedule.customFields = JSON.parse(schedule.customFields);
         schedule.customFields.map((value, key) => {
           if ( key > 0 ) {
