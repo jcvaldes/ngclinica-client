@@ -20,7 +20,7 @@ const routes: Routes = [
         component: AppointmentListComponent
       },
       {
-        path: 'polls',
+        path: 'polls/:id',
         component: SurveyjsComponent,
         data: { titulo: 'Encuesta'}
       },

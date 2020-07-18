@@ -1,6 +1,6 @@
 import { environment } from './../../../../../environments/environment';
 import { Component, OnInit, OnDestroy, ViewChild, Inject } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { Subscription, timer } from 'rxjs';
 import { NotificationService } from '../../../../services/notification.service';
 import { Schedule } from '../schedule.model';
@@ -41,18 +41,54 @@ export class ScheduleDetailComponent implements OnInit, OnDestroy {
       category: new FormControl(null, Validators.required),
     });
 
-    this.form = fb.group({
-      id: new FormControl(null),
-      appointmentDate: new FormControl(null, Validators.required),
-      appointmentTime: new FormControl(null, Validators.required),
-      reviewProfessional: new FormControl(null),
-      status: new FormControl('1', Validators.required),
-    });
+
     this.url = `${environment.apiUrl}/api/schedule`;
+    this.createFormGroup();
     this.populateForm(data);
   }
   ngOnDestroy() {
     this.scheduleSubscription.unsubscribe();
+  }
+  createFormGroup() {
+    this.form = this.fb.group({
+      id: new FormControl(null),
+      appointmentDate: new FormControl(null, Validators.required),
+      appointmentTime: new FormControl(null, Validators.required),
+      reviewProfessional: new FormControl(null),
+      customfields: new FormArray([
+        new FormGroup({
+          field: new FormControl(null),
+          value: new FormControl(null),
+        })
+      ]),
+      status: new FormControl('1', Validators.required),
+    });
+  }
+  get customfields(): FormArray {
+    return this.form.get('customfields') as FormArray;
+  }
+  addCustomField(){
+    const controls = this.form.controls['customfields'] as FormArray;
+    if (controls.length > 2) {
+      Swal.fire({
+        title: 'Atención',
+        text: 'Puedes agregar solo 3 campos customfields',
+        icon: 'info',
+        showConfirmButton: true,
+        timer: 2000,
+        animation: true,
+      });
+      return;
+    }
+    this.customfields.push(new FormGroup({
+      field: new FormControl(null),
+      value: new FormControl(null)
+    }));
+  }
+  removeCustomField() {
+    if (this.customfields.length > 1) {
+      this.customfields.removeAt(this.customfields.length - 1);
+    }
   }
   ngOnInit() { }
   onClear() {
@@ -106,17 +142,18 @@ export class ScheduleDetailComponent implements OnInit, OnDestroy {
   private prepareData(value) {
     const time = value.appointmentTime.split(':');
     const date = moment(value.appointmentDate);
-    const appointmentDate =  new Date(
-        date.year(),
-        date.month(),
-        date.date(),
-        time[0],
-        time[1]
-      );
+    const appointmentDate = new Date(
+      date.year(),
+      date.month(),
+      date.date(),
+      time[0],
+      time[1]
+    );
     return {
       appointmentDate,
       reviewProfessional: value.reviewProfessional,
-      status: value.status
+      status: value.status,
+      customfields: value.customfields
     };
   }
   populateForm(data) {
@@ -132,6 +169,20 @@ export class ScheduleDetailComponent implements OnInit, OnDestroy {
         this.form.get('appointmentTime').setValue(
           moment(schedule.appointmentDate).format('HH:mm').toString()
         );
+        debugger
+        schedule.customFields = JSON.parse(schedule.customFields);
+        schedule.customFields.map((value, key) => {
+          if ( key > 0 ) {
+           this.customfields.push(
+            new FormGroup({
+              field: new FormControl(null),
+              value: new FormControl(null)
+            })
+           );
+          }
+          this.form.get('customfields').get(key.toString()).get('field').setValue(value.field.toString());
+          this.form.get('customfields').get(key.toString()).get('value').setValue(value.value.toString());
+      });
         this.form.get('reviewProfessional').setValue(schedule.reviewProfessional);
       }, err => this._notificationService.error(`:: ${err}`));
   }

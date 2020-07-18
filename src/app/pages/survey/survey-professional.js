@@ -31,21 +31,16 @@ const survey = {
           name: 'question3',
           title: 'Temperatura Corporal',
           isRequired: true,
-          choices: [
-            {
-              value: '1',
-              text: 'Sí',
-            },
-            {
-              value: '2',
-              text: 'No',
-            },
-          ],
         },
         {
           type: 'text',
           name: 'question4',
           title: 'Presión Arterial',
+          isRequired: true,
+        },
+        {
+          type: 'comment',
+          name: 'question5',
           isRequired: true,
         },
       ],

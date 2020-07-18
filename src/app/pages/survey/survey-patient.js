@@ -26,6 +26,11 @@ const survey = {
             },
           ],
         },
+        {
+          type: 'comment',
+          name: 'question3',
+          title: '¿Tienes algún comentario que quieras dejar asentado?',
+        },
       ],
       title: 'Encuesta de Satisfacción al Cliente',
       description: 'Clinica Monllor',
