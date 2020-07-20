@@ -11,6 +11,7 @@ import { PipesModule } from '../../../pipes/pipes.module';
 import { ScheduleRoutingModule } from './schedule-routing.module';
 import { ScheduleDetailComponent } from './schedule-detail/schedule-detail.component';
 import { CustomFieldComponent } from '../../../components/customfields/custom-field.component';
+import { ScheduleFilterComponent } from './schedule-filter/schedule-filter.component';
 
 @NgModule({
   imports: [
@@ -26,9 +27,9 @@ import { CustomFieldComponent } from '../../../components/customfields/custom-fi
     ScheduleComponent,
     ScheduleDetailComponent,
     ScheduleListComponent,
+    ScheduleFilterComponent,
     CustomFieldComponent
   ],
-
   providers: [],
   entryComponents: []
 })
