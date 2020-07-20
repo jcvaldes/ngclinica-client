@@ -8,7 +8,7 @@ import * as moment from 'moment';
   styleUrls: ['./schedule-filter.component.scss'],
 })
 export class ScheduleFilterComponent implements OnInit {
-  @Output() searchFiltered = new EventEmitter();
+  @Output() searchValues = new EventEmitter();
   searching = false;
   form: FormGroup = new FormGroup({
     // patientId: new FormControl(null),
@@ -23,7 +23,10 @@ export class ScheduleFilterComponent implements OnInit {
   ngOnInit() {
   }
   onSearch() {
-    this.searchFiltered.emit();
+    const values = {
+      status: +this.form.get('status').value,
+    };
+    this.searchValues.emit(JSON.stringify(values));
   }
   onClear() {
     
