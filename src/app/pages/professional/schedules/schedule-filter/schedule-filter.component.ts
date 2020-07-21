@@ -13,8 +13,8 @@ export class ScheduleFilterComponent implements OnInit {
   form: FormGroup = new FormGroup({
     // patientId: new FormControl(null),
     // professionalId: new FormControl(null),
-    // category: new FormControl(null),
     status: new FormControl('1'),
+    CategoryId: new FormControl(null),
     temperature: new FormControl(null),
     dateAppointment:  new FormControl(null),
   });
@@ -25,6 +25,7 @@ export class ScheduleFilterComponent implements OnInit {
   onSearch() {
     const values = {
       status: +this.form.get('status').value,
+      CategoryId: +this.form.get('CategoryId').value,
     };
     this.searchValues.emit(JSON.stringify(values));
   }

@@ -1,0 +1,19 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Operaciones</h4>
+
+    <div class="row">
+      <div class="col-lg-12 col-xl-12 px-0 py-lg-2 py-2" >
+        <div class="d-table h-100 w-100">
+          <div class="d-table-cell align-middle">
+            <app-grafico-dona [chartLabels]="graficos.grafico1.labels" [chartData]="graficos.grafico1.data" [chartType]="graficos.grafico1.type">
+            </app-grafico-dona>
+            <a href="#" (click)="downloadCanvas($event)">EXPORTAR</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>

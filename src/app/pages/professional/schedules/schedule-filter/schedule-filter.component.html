@@ -17,8 +17,13 @@
           <mat-option value="3">Atentido</mat-option>
           <mat-option value="4">Cancelado</mat-option>
         </mat-select>
-
       </mat-form-field>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-12 d-inline-flex">
+      <app-category-search
+        [isMultiple]="false"
+        [comboCtrl]="form.controls['CategoryId']"
+      ></app-category-search>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-12 d-inline-flex">
       <mat-form-field>
@@ -40,18 +45,20 @@
     <div class="col-lg-3 col-md-3 col-sm-12 d-inline-flex">
       <mat-form-field>
         <input
-          id="temperature"
           matInput
-          name="temperature"
-          formControlName="temperature"
-          placeholder="Temperatura"
-          autocomplete="off"
-          maxlength="2"
+          formControlName="appointmentDate"
+          [matDatepicker]="appointmentDate"
+          placeholder="Fecha de Turno"
           required
         />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="appointmentDate"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #appointmentDate></mat-datepicker>
+        <mat-error>requerido</mat-error>
       </mat-form-field>
     </div>
-
   </div>
   <button
     *ngIf="!searching"

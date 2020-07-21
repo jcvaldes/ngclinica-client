@@ -6,6 +6,8 @@ import { VerifyTokenGuard } from '../services/guards/verify-token.guard';
 import { AdminGuard } from '../services/guards/admin.guard';
 import { ProfileComponent } from './admin/users/profile/profile.component';
 import { ProfessionalGuard } from '../services/guards/professional.guard';
+import { ScheduleModule } from './professional/schedules/schedule.module';
+import { SchedulesRepModule } from './admin/reports/schedulesrep/schedulesrep.module';
 
 const routes: Routes = [
   {
@@ -34,6 +36,11 @@ const routes: Routes = [
     path: 'appointments',
     canActivate: [LoginGuard],
     loadChildren: () => import('./appointments/appointments.module').then(m => m.AppointmentsModule)
+  },
+  {
+    path: 'reports/schedules',
+    canActivate: [AdminGuard],
+    loadChildren: () => import('./admin/reports/schedulesrep/schedulesrep.module').then(m => m.SchedulesRepModule)
   },
   {
     path: 'schedules',
