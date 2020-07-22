@@ -40,7 +40,6 @@ export class GraficoDonaComponent implements OnInit, OnChanges {
   @Input('chartData') doughnutChartData: number[] = [];
   // tslint:disable-next-line:no-input-rename
   @Input('chartType') doughnutChartType: string = '';
-
   constructor() {}
 
   ngOnInit() {
@@ -77,10 +76,5 @@ export class GraficoDonaComponent implements OnInit, OnChanges {
   // exportGraph(){
   //   this.downloadLink = this.export_graph.toDataURL("image/png");
   // }
-  downloadCanvas(event) {
-    var anchor = event.target;
-    // get the canvas
-    anchor.href = document.getElementsByTagName('canvas')[0].toDataURL();
-    anchor.download = "test.png";
-  }
+
 }
