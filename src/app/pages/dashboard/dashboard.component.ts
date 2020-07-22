@@ -15,7 +15,13 @@ export class DashboardComponent implements OnInit {
       labels: [],
       data:  [],
       type: 'doughnut',
-    }
+    },
+    grafico2: {
+      labels: [],
+      data:  [],
+      type: 'bar',
+    },
+  
   };
   constructor(private httpService: HttpService) { }
   ngOnInit(): void {
@@ -24,21 +30,32 @@ export class DashboardComponent implements OnInit {
       const appointmentByDayOfWeek = resp.appointmentByDayOfWeek;
       this.graficos.grafico1.labels = opByCategory.map(i => i.Category.name);
       this.graficos.grafico1.data = opByCategory.map(i => i.cnt);
+
     });
   }
   createPdf() {
-    const dataURL = document.getElementsByTagName('canvas')[0].toDataURL();
-    var pdf = new jsPDF();
-    pdf.text(20, 20, 'Operaciones x Especialidad')
-    pdf.addImage(dataURL, 'JPEG', 20, 30);
+    const grafico1 = document.getElementsByTagName('canvas')[0].toDataURL();
+    const pdf = new jsPDF();
+    pdf.text(20, 20, 'Operaciones x Especialidad');
+    pdf.addImage(grafico1, 'JPEG', 20, 30);
+
+
+    const grafico2 = document.getElementsByTagName('canvas')[1].toDataURL();
+    pdf.text(20, 140, 'Turnos x Dia de la semana');
+    pdf.addImage(grafico2, 'JPEG', 20,150);
+
 
     pdf.save('reporte.pdf');
   }
-  downloadCanvas(event) {
-    var anchor = event.target;
-    // get the canvas
+  downloadGraph1(event) {
+    const anchor = event.target;
     anchor.href = document.getElementsByTagName('canvas')[0].toDataURL();
-    anchor.download = "test.png";
+    anchor.download = 'grafico1.png';
+  }
+  downloadGraph2(event) {
+    const anchor = event.target;
+    anchor.href = document.getElementsByTagName('canvas')[1].toDataURL();
+    anchor.download = 'grafico2.png';
   }
 
 }
