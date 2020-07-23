@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { HttpService } from '../../services/http.service';
+import { AuthService } from '../../auth/auth.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -24,7 +25,10 @@ export class DashboardComponent implements OnInit {
     },
 
   };
-  constructor(private httpService: HttpService) { }
+  constructor(
+    private httpService: HttpService,
+    public authService: AuthService
+  ) { }
   ngOnInit(): void {
     this.httpService.get(this.url).subscribe(resp => {
       const opByCategory = resp.opByCategory;
