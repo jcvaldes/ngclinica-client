@@ -16,3 +16,5 @@ como se muestra en la imagen
 ## Login:
 
 https://clinica-monllor.herokuapp.com/login
+
+![Login](https://github.com/nachomonllor/clinica-client/blob/master/readme_assets/login.gif)
