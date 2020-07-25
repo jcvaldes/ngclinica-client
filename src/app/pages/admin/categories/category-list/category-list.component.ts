@@ -15,11 +15,12 @@ import { HttpService } from '../../../../services/http.service';
 import { UserService } from '../../users/user.service';
 import { NotificationService } from '../../../../services/notification.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { routerTransition } from '../../../route-animation';
 
 @Component({
   selector: 'app-category-list',
   templateUrl: './category-list.component.html',
-  styleUrls: ['./category-list.component.scss']
+  styleUrls: ['./category-list.component.scss'],
 })
 export class CategoryListComponent implements OnInit {
   url: string;

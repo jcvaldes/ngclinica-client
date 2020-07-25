@@ -15,12 +15,13 @@ import { User } from '../user.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { validRoles } from '../../../../utils/enums';
 import { HttpService } from '../../../../services/http.service';
+import { routerTransition } from '../../../route-animation';
 
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss']
+  styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit {
   dataSource: MatTableDataSource<User>;

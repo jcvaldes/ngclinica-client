@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { slideInAnimation } from '../animation';
-import { RouterOutlet } from '@angular/router';
 declare function init_plugins();
 @Component({
   selector: 'app-pages',
   templateUrl: './pages.component.html',
-  styleUrls: ['./pages.component.scss'],
-  animations: [ slideInAnimation ]
+  styleUrls: ['./pages.component.scss']
 })
 export class PagesComponent implements OnInit {
 
@@ -14,8 +11,5 @@ export class PagesComponent implements OnInit {
 
   ngOnInit(): void {
     init_plugins();
-  }
-  prepareRoute(outlet: RouterOutlet) {
-    return outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation;
   }
 }

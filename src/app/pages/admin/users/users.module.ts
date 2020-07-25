@@ -13,8 +13,6 @@ import { PipesModule } from '../../../pipes/pipes.module';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfessionalSearchComponent } from './professional-search/professional-search.component';
 
-
-
 @NgModule({
   imports: [
     CommonModule,

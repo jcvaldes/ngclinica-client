@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CategoriesComponent } from './categories.component';
 import { CategoryListComponent } from './category-list/category-list.component';
-import { CategoryDetailComponent } from './category-detail/category-detail.component';
 import { VerifyTokenGuard } from '../../../services/guards/verify-token.guard';
 
 const routes: Routes = [
@@ -14,10 +13,9 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: CategoryListComponent
-      },
-      { path: 'new', component: CategoryDetailComponent },
-      { path: ':id', component: CategoryDetailComponent },
+        component: CategoryListComponent,
+        data: { animation: 'CategoryListPage'}
+      }
     ]
   }
 ];

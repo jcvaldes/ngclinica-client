@@ -15,10 +15,11 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: UserListComponent
+        component: UserListComponent,
+        data: { animation: 'UserListPage' },
       },
-      { path: 'new', component: UserDetailComponent, data: { role: validRoles.Admin} },
-      { path: ':id', component: UserDetailComponent },
+      { path: 'new', component: UserDetailComponent, data: { role: validRoles.Admin, animation: 'UserCreatePage' } },
+      { path: ':id', component: UserDetailComponent, data: {animation: 'UserDetailPage'} },
     ]
   }
 ];

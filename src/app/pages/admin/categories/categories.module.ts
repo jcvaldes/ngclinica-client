@@ -8,6 +8,7 @@ import { CategoryDetailComponent } from './category-detail/category-detail.compo
 import { CategoryListComponent } from './category-list/category-list.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { CategorySearchComponent } from './category-search/category-search.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({

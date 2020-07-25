@@ -31,6 +31,7 @@
     "@angular/router": "~9.1.4",
     "bootstrap": "4.5.0",
     "chart.js": "2.9.3",
+    "chartjs-plugin-annotation": "0.5.7",
     "express": "4.17.1",
     "firebase": "7.14.6",
     "font-awesome-5-css": "5.4.1",

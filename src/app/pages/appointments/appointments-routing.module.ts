@@ -17,7 +17,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: AppointmentListComponent
+        component: AppointmentListComponent,
+        data: { animation: 'AppointmentListPage' },
       },
       {
         path: 'polls/:id',

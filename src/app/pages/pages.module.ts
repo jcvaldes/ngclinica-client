@@ -9,6 +9,7 @@ import { UsersModule } from './admin/users/users.module';
 import { ChartsModule } from 'ng2-charts';
 import { GraficoDonaComponent } from '../components/grafico-dona/grafico-dona.component';
 import { GraficoBarraComponent } from '../components/grafico-barra/grafico-barra.component';
+import { MaterialModule } from '../shared/material.module';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { GraficoBarraComponent } from '../components/grafico-barra/grafico-barra
     ReactiveFormsModule,
     ChartsModule,
     PagesRoutingModule,
+    MaterialModule,
   ],
   exports: [DashboardComponent],
   providers: []

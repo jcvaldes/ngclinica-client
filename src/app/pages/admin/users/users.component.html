@@ -1,1 +1,3 @@
-<router-outlet></router-outlet>
+<div [@routerTransition]="prepareRoute(outlet)" class="content">
+  <router-outlet #outlet="outlet"></router-outlet>
+</div>
